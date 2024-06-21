@@ -19,14 +19,10 @@ export class SocketIoService {
     this.TT2_WS_URL = this.configService.get('TT2_WS_URL');
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
     this.PLAYER_TOKEN = this.configService.get('PLAYER_TOKEN');
-
-    this.createSocketInstance = this.createSocketInstance.bind(this);
-    this.onConnectEventHandler = this.onConnectEventHandler.bind(this);
-    this.onAttackEventHandler = this.onAttackEventHandler.bind(this);
   }
   
 
-  createSocketInstance(channelName: string) {
+  createSocketInstance = (channelName: string) => {
     return io(this.TT2_WS_URL + '/' + channelName, {
       path: '/api',
       autoConnect: false,
@@ -39,7 +35,7 @@ export class SocketIoService {
     });
   };
 
-  async onConnectEventHandler() {
+  onConnectEventHandler = async () => {
     console.log('TT2 SocketIO connected!');
     const url = 'https://tt2-public.gamehivegames.com/raid/subscribe';
     const requestData = { 'player_tokens': [this.PLAYER_TOKEN] };
@@ -57,7 +53,7 @@ export class SocketIoService {
     }
   }
 
-  onAttackEventHandler(data: any) {
+  onAttackEventHandler = (data: any) => {
     console.log(data);
   };
 }
