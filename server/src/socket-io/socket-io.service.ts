@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
-import axios from 'axios';
+import { TT2Service } from 'src/tt2.service';
 
 interface EnvironmentVariables {
   TT2_WS_URL: string;
@@ -13,12 +13,13 @@ interface EnvironmentVariables {
 export class SocketIoService {
   private readonly TT2_WS_URL;
   private readonly APP_TOKEN;
-  private readonly PLAYER_TOKEN;
 
-  constructor(private readonly configService: ConfigService<EnvironmentVariables>) {
+  constructor(
+    private readonly configService: ConfigService<EnvironmentVariables>,
+    private readonly tt2Service: TT2Service
+  ) {
     this.TT2_WS_URL = this.configService.get('TT2_WS_URL');
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
-    this.PLAYER_TOKEN = this.configService.get('PLAYER_TOKEN');
   }
   
 
@@ -37,20 +38,8 @@ export class SocketIoService {
 
   onConnectEventHandler = async () => {
     console.log('TT2 SocketIO connected!');
-    const url = 'https://tt2-public.gamehivegames.com/raid/subscribe';
-    const requestData = { 'player_tokens': [this.PLAYER_TOKEN] };
-    const requestHeaders = {
-      "API-Authenticate": this.APP_TOKEN,
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    };
-    let response = await axios.post(url, requestData, { headers: requestHeaders });
-      
-    if (response.status === 200 && response.data.hasOwnProperty('ok')) {
-      console.log('Subscription successful!');
-    } else {
-      throw new Error(response.data._error.message);
-    }
+    await this.tt2Service.subscribe();
+    // await this.tt2Service.getClanData();
   }
 
   onAttackEventHandler = (data: any) => {
