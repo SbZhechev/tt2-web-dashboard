@@ -1,7 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io } from 'socket.io-client';
 import { TT2Service } from 'src/tt2.service';
+import { Model } from 'mongoose';
+import { RaidAttackInterface } from 'src/interfaces/RaidAttackInterface';
+import { RAID_ATTACK_MODEL_TOKEN } from 'src/constants';
 
 interface EnvironmentVariables {
   TT2_WS_URL: string;
@@ -16,7 +19,9 @@ export class SocketIoService {
 
   constructor(
     private readonly configService: ConfigService<EnvironmentVariables>,
-    private readonly tt2Service: TT2Service
+    private readonly tt2Service: TT2Service,
+    @Inject(RAID_ATTACK_MODEL_TOKEN)
+    private readonly raidAttackModel: Model<RaidAttackInterface>
   ) {
     this.TT2_WS_URL = this.configService.get('TT2_WS_URL');
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
@@ -42,7 +47,10 @@ export class SocketIoService {
     // await this.tt2Service.getClanData();
   }
 
-  onAttackEventHandler = (data: any) => {
-    console.log(data);
+  onAttackEventHandler = async (data: RaidAttackInterface) => {
+    const raidAttackDocument = new this.raidAttackModel(data);
+    await raidAttackDocument.save();
+    
+    console.log('Raid attack saved successfully!');
   };
 }

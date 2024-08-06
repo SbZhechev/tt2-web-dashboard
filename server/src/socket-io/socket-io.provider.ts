@@ -6,7 +6,7 @@ export const socketIoProvider = {
   useFactory: (socketIoService: SocketIoService) => {
     let raidInstance = socketIoService.createSocketInstance('raid');
     raidInstance.on('connect', socketIoService.onConnectEventHandler);
-    raidInstance.on('start_attack', socketIoService.onAttackEventHandler);
+    raidInstance.on('attack', socketIoService.onAttackEventHandler);
 
     raidInstance.connect();
   },
