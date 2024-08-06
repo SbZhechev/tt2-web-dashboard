@@ -4,7 +4,8 @@ import { io } from 'socket.io-client';
 import { TT2Service } from 'src/tt2.service';
 import { Model } from 'mongoose';
 import { RaidAttackInterface } from 'src/interfaces/RaidAttackInterface';
-import { RAID_ATTACK_MODEL_TOKEN } from 'src/constants';
+import { Raid } from 'src/interfaces/RaidInterface';
+import { RAID_ATTACK_MODEL_TOKEN, RAID_MODEL_TOKEN } from 'src/constants';
 
 interface EnvironmentVariables {
   TT2_WS_URL: string;
@@ -21,7 +22,9 @@ export class SocketIoService {
     private readonly configService: ConfigService<EnvironmentVariables>,
     private readonly tt2Service: TT2Service,
     @Inject(RAID_ATTACK_MODEL_TOKEN)
-    private readonly raidAttackModel: Model<RaidAttackInterface>
+    private readonly raidAttackModel: Model<RaidAttackInterface>,
+    @Inject(RAID_MODEL_TOKEN)
+    private readonly raidModel: Model<Raid>
   ) {
     this.TT2_WS_URL = this.configService.get('TT2_WS_URL');
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
@@ -50,7 +53,14 @@ export class SocketIoService {
   onAttackEventHandler = async (data: RaidAttackInterface) => {
     const raidAttackDocument = new this.raidAttackModel(data);
     await raidAttackDocument.save();
-    
+
     console.log('Raid attack saved successfully!');
   };
+
+  onRaidStartEventHandler = async (data: Raid) => {
+    const raidDocument = new this.raidModel(data);
+    await raidDocument.save();
+
+    console.log('Raid saved successfully!');
+  }
 }

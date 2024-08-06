@@ -7,6 +7,7 @@ export const socketIoProvider = {
     let raidInstance = socketIoService.createSocketInstance('raid');
     raidInstance.on('connect', socketIoService.onConnectEventHandler);
     raidInstance.on('attack', socketIoService.onAttackEventHandler);
+    raidInstance.on('start', socketIoService.onRaidStartEventHandler);
 
     raidInstance.connect();
   },
