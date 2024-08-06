@@ -11,14 +11,14 @@ export const RaidAttackSchema = new mongoose.Schema({
     attacks_remaining: Number
   },
   attack_log: {
-    cards_damage: {
+    cards_damage: [{
       titan_index: Number,
-      id: Number,
+      id: String,
       damage_log: [{
-        id: Number,
+        id: String,
         value: Number
       }]
-    },
+    }],
     cards_level: [{
       id: String,
       value: Number

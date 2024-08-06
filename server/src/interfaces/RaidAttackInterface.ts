@@ -6,6 +6,12 @@ interface CardLevel {
   value: number
 }
 
+interface CardDamage {
+  titan_index: number,
+  id: String,
+  damage_log: DamageLog[]
+}
+
 export interface RaidAttackInterface extends Document {
   clan_code: string,
   raid_id: number,
@@ -17,11 +23,7 @@ export interface RaidAttackInterface extends Document {
     attacks_remaining: number
   },
   attack_log: {
-    cards_damage: {
-      titan_index: number,
-      id: number,
-      damage_log: DamageLog[]
-    },
+    cards_damage: CardDamage[],
     cards_level: CardLevel[],
     attack_datetime: Date
   },
