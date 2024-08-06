@@ -28,14 +28,32 @@ export const RaidSchema = new mongoose.Schema({
   },
   start_at: Date,
   ended_at: Date,
-  num_attacks: Number,
-  total_damage: Number,
-  log: [{
+  retired_at: Date,
+  next_reset_at: Date,
+  card_bonuses: [{
+    id: String,
+    value: Number
+  }],
+  titan_target: [{
+    updated_at: Date,
     enemy_id: String,
-    titan_index: Number,
-    damage_log: [{
+    state: [{
       id: String,
-      value: Number
+      state: String
+    }]
+  }],
+  raid_summary: [{
+    player_code: String,
+    name: String,
+    num_attacks: Number,
+    total_damage: Number,
+    log: [{
+      enemy_id: String,
+      titan_index: Number,
+      damage_log: [{
+        id: String,
+        value: Number
+      }]
     }]
   }]
 });

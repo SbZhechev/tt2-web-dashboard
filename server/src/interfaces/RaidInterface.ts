@@ -14,6 +14,30 @@ interface Log {
   damage_log: DamageLog[];
 }
 
+interface CardBonus {
+  id: string,
+  value: number
+}
+
+interface TitanTargetState {
+  id: string,
+  state: string
+}
+
+interface TitanTarget {
+  updated_at: Date,
+  enemy_id: string,
+  state: TitanTargetState[]
+}
+
+interface RaidSummary {
+  player_code: string,
+  name: string,
+  num_attacks: number,
+  total_damage: number,
+  log: Log[]
+}
+
 export interface Raid extends Document {
   clan_code: string,
   raid_id: number,
@@ -34,7 +58,9 @@ export interface Raid extends Document {
   },
   start_at: Date,
   ended_at: Date,
-  num_attacks: number,
-  total_damage: number,
-  log: Log[]
+  retired_at: Date,
+  next_reset_at: Date,
+  card_bonuses: CardBonus[],
+  titan_target: TitanTarget[],
+  raid_summary: RaidSummary[]
 }
