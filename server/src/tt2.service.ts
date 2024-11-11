@@ -39,11 +39,11 @@ export class TT2Service {
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
 
-      if (response.status === 200 && response.data.hasOwnProperty('ok')) {
-        console.log('Subscription successful!');
-      } else {
+      if (response.status === 200 && response.data.hasOwnProperty('_error')) {
         throw new Error(response.data._error.message);
       }
+
+      console.log('Subscription successful!');
     } catch (error) {
       console.log(error);
     }
@@ -59,11 +59,10 @@ export class TT2Service {
 
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
-      if (response.status === 200 && !response.data.hasOwnProperty('ok')) {
+      if (response.status === 200 && response.data.hasOwnProperty('_error')) {
         throw new Error(response.data._error.message);
       }
 
-      console.log(response.data);
       const playerDocument = new this.playerModel(response.data);
       await playerDocument.save();
 
@@ -83,7 +82,7 @@ export class TT2Service {
 
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
-      if (response.status === 200 && !response.data.hasOwnProperty('ok')) {
+      if (response.status === 200 && response.data.hasOwnProperty('_error')) {
         throw new Error(response.data._error.message);
       }
 

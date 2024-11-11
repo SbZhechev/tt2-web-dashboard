@@ -29,7 +29,6 @@ export class SocketIoService {
     this.TT2_WS_URL = this.configService.get('TT2_WS_URL');
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
   }
-  
 
   createSocketInstance = (channelName: string) => {
     return io(this.TT2_WS_URL + '/' + channelName, {
@@ -47,7 +46,6 @@ export class SocketIoService {
   onConnectEventHandler = async () => {
     console.log('TT2 SocketIO connected!');
     await this.tt2Service.subscribe();
-    // await this.tt2Service.getClanData();
   }
 
   onAttackEventHandler = async (data: RaidAttackInterface) => {
