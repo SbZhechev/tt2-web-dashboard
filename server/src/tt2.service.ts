@@ -1,10 +1,11 @@
 import { Model } from 'mongoose';
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { PLAYER_DATA_PROPERTIES, PLAYER_MODEL_TOKEN, CLAN_MODEL_TOKEN } from './constants';
+import { PLAYER_DATA_PROPERTIES, PLAYER_MODEL_TOKEN, CLAN_MODEL_TOKEN, CLAN_MEMBER_MODEL_TOKEN } from './constants';
 import { Player } from './interfaces/PlayerInterface';
 import { Clan } from './interfaces/ClanInterface';
 import axios from 'axios';
+import { ClanMember } from './interfaces/ClanMemberInterface';
 
 @Injectable()
 export class TT2Service {
@@ -17,7 +18,9 @@ export class TT2Service {
     @Inject(PLAYER_MODEL_TOKEN)
     private readonly playerModel: Model<Player>,
     @Inject(CLAN_MODEL_TOKEN)
-    private readonly clanModel: Model<Clan>
+    private readonly clanModel: Model<Clan>,
+    @Inject(CLAN_MEMBER_MODEL_TOKEN)
+    private readonly clanMemberModel: Model<ClanMember>
   ) {
     this.APP_TOKEN = this.configService.get('APP_TOKEN');
     this.PLAYER_TOKEN = this.configService.get('PLAYER_TOKEN');
@@ -35,13 +38,9 @@ export class TT2Service {
 
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
-        
+
       if (response.status === 200 && response.data.hasOwnProperty('ok')) {
         console.log('Subscription successful!');
-
-        // await this.clanModel.insertMany(response.data.ok);
-
-        // console.log('Clan\'s data saved successfully!');
       } else {
         throw new Error(response.data._error.message);
       }
@@ -60,7 +59,11 @@ export class TT2Service {
 
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
+      if (response.status === 200 && !response.data.hasOwnProperty('ok')) {
+        throw new Error(response.data._error.message);
+      }
 
+      console.log(response.data);
       const playerDocument = new this.playerModel(response.data);
       await playerDocument.save();
 
@@ -80,12 +83,13 @@ export class TT2Service {
 
     try {
       let response = await axios.post(url, requestData, { headers: requestHeaders });
-      let playersData = response.data.players_data;
-      playersData.forEach((playerData: Player) => {
-        playerData.clan_code = response.data.clan_code;
-      });
+      if (response.status === 200 && !response.data.hasOwnProperty('ok')) {
+        throw new Error(response.data._error.message);
+      }
 
-      await this.playerModel.insertMany(playersData);
+      let clanMembersData = response.data.players_data;
+
+      await this.clanMemberModel.insertMany(clanMembersData);
 
       console.log('Clan members data saved successfully!');
     } catch (error) {

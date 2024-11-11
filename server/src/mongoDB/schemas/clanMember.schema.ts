@@ -1,33 +1,16 @@
 import * as mongoose from 'mongoose';
 
-export const PlayerSchema = new mongoose.Schema({
+export const ClanMemberSchema = new mongoose.Schema({
   player_code: String,
   country_code: String,
   max_stage: Number,
-  crafting_shards_spent: Number,
   raid_wildcard_count: Number,
   current_card_currency: Number,
-  additive_relic_multiplier: Number,
-  relics_received: String,
-  relics_spent: String,
-  summon_level: Number,
   name: String,
-  total_tournaments: String,
-  undisputed_count: String,
-  titan_points: String,
   total_raid_player_xp: String,
   player_raid_level: String,
+  summon_level: Number,
   total_card_level: String,
-  equipment_set_count: String,
-  total_pet_levels: String,
-  total_skill_points: String,
-  total_helper_weapons: String,
-  total_clan_scrolls: String,
-  challenge_tournaments_participation: String,
-  challenge_tournaments_undisputed_count: String,
-  current_world_id: String,
-  clan_code: String,
-  clan_name: String,
   role: String,
   weekly_ticket_count: String,
   titan_cards: [
@@ -96,60 +79,12 @@ export const PlayerSchema = new mongoose.Schema({
   loyalty_level: String,
   daily_raid_tickets: String,
   previous_rank: String,
-  artifacts: [
-    {
-      level: String,
-      artifact_id: String,
-      is_enchanted: Boolean
-    }
-  ],
-  seasonal_relics_received: String,
-  seasonal_relics_spent: String,
-  seasonal_relic_multiplier: Number,
-  seasonal_artifacts: [
-    {
-      level: String,
-      artifact_id: String,
-      is_enchanted: Boolean
-    }
-  ],
   cards: [
     {
       level: Number,
       quantity_received: Number,
       quantity_spent: Number,
       skill_name: String
-    }
-  ],
-  pets: [
-    {
-      level: Number,
-      pet_id: String
-    }
-  ],
-  badge_count: {
-    '0': Number,
-    '1': Number,
-    '2': Number,
-    '3': Number,
-    '4': Number
-  },
-  hero_weapon: [
-    {
-      level: Number,
-      HelperID: String
-    }
-  ],
-  clan_scroll: [
-    {
-      level: Number,
-      ScrollId: String
-    }
-  ],
-  skill_tree: [
-    {
-      level: Number,
-      skill_id: String
     }
   ],
   equipment_set: [String]
